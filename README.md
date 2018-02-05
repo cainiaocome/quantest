@@ -1,3 +1,3 @@
 # quantest
-initial version
+initial version 
 test new version from fedora linux
