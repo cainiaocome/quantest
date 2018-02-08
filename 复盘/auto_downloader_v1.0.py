@@ -15,10 +15,10 @@ if __name__ == '__main__':
     today_ISO = datetime.today().date().isoformat()
 
     api = tushare_api()
-    start = '2018-01-01'
+    start = '2018-01-15'
     end = today_ISO
     # schedule = sched.scheduler(time.time, time.sleep)
-    sched_Timer = '16:06'
+    sched_Timer = '17:00'
 
     while True:
         now = strftime("%H:%M", localtime())
