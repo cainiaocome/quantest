@@ -431,7 +431,7 @@ class tushare_api(object):
         except:
             print('download report_data_2017_3 failed')
 
-        '''
+        
         try:
             data_2017_4 = ts.get_report_data(2017, 4)
             print('Now downloading report_data_2017_4, total records:' + str(len(data_2017_4)))
@@ -439,7 +439,7 @@ class tushare_api(object):
             data_2017_4.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
         except:
             print('download report_data_2017_4 failed')
-        '''
+        
 
         data = data_2017_3.append(data_2017_2).append(data_2017_1)
 
@@ -476,7 +476,6 @@ class tushare_api(object):
         except:
             print('download profit_data_2017_3 failed')
 
-        '''
         try:
             data_2017_4 = ts.get_profit_data(2017, 4)
             print('Now downloading profit_data_2017_4, total records:' + str(len(data_2017_4)))
@@ -484,7 +483,6 @@ class tushare_api(object):
             data_2017_4.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
         except:
             print('download profit_data_2017_4 failed')
-        '''
 
         data = data_2017_3.append(data_2017_2).append(data_2017_1)
         data.drop_duplicates(subset=['code'], keep='first', inplace=True)
@@ -519,7 +517,6 @@ class tushare_api(object):
         except:
             print('download operation_data_2017_3 failed')
 
-        '''
         try:
             data_2017_4 = ts.get_operation_data(2017, 4)
             print('Now downloading operation_data_2017_4, total records:' + str(len(data_2017_4)))
@@ -527,7 +524,6 @@ class tushare_api(object):
             data_2017_4.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
         except:
             print('download operation_data_2017_4 failed')
-        '''
 
         data = data_2017_3.append(data_2017_2).append(data_2017_1)
         data.drop_duplicates(subset=['code'], keep='first', inplace=True)
@@ -562,7 +558,6 @@ class tushare_api(object):
         except:
             print('download growth_data_2017_3 failed')
 
-        '''
         try:
             data_2017_4 = ts.get_growth_data(2017, 4)
             print('Now downloading growth_data_2017_4, total records:' + str(len(data_2017_4)))
@@ -570,7 +565,6 @@ class tushare_api(object):
             data_2017_4.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
         except:
             print('download growth_data_2017_4 failed')
-        '''
 
         data = data_2017_3.append(data_2017_2).append(data_2017_1)
         data.drop_duplicates(subset=['code'], keep='first', inplace=True)
@@ -605,7 +599,6 @@ class tushare_api(object):
         except:
             print('download debtpaying_data_2017_3 failed')
 
-        '''
         try:
             data_2017_4 = ts.get_debtpaying_data(2017, 4)
             print('Now downloading debtpaying_data_2017_4, total records:' + str(len(data_2017_4)))
@@ -613,7 +606,6 @@ class tushare_api(object):
             data_2017_4.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
         except:
             print('download debtpaying_data_2017_4 failed')
-        '''
 
 
         data = data_2017_3.append(data_2017_2).append(data_2017_1)
@@ -649,7 +641,6 @@ class tushare_api(object):
         except:
             print('download cashflow_data_2017_3 failed')
 
-        '''
         try:
             data_2017_4 = ts.get_cashflow_data(2017, 4)
             print('Now downloading cashflow_data_2017_4, total records:' + str(len(data_2017_4)))
@@ -657,7 +648,6 @@ class tushare_api(object):
             data_2017_4.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
         except:
             print('download cashflow_data_2017_4 failed')
-        '''
 
         data = data_2017_3.append(data_2017_2).append(data_2017_1)
         data.drop_duplicates(subset=['code'], keep='first', inplace=True)
@@ -760,7 +750,6 @@ class tushare_api(object):
         except:
             print('download xsg_data_2017_3 failed')
 
-        '''
         try:
             data_2017_4 = ts.xsg_data(2017, 4)
             print('Now downloading xsg_data_2017_4, total records:' + str(len(data_2017_4)))
@@ -768,7 +757,6 @@ class tushare_api(object):
             data_2017_4.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
         except:
             print('download xsg_data_2017_4 failed')
-        '''
 
         data = data_2017_3.append(data_2017_2).append(data_2017_1)
         data.drop_duplicates(subset=['code'], keep='first', inplace=True)
@@ -804,7 +792,6 @@ class tushare_api(object):
         except:
             print('download fund_holdings_2017_3 failed')
 
-        '''
         try:
             data_2017_4 = ts.fund_holdings(2017, 4)
             print('Now downloading fund_holdings_2017_4, total records:' + str(len(data_2017_4)))
@@ -812,7 +799,6 @@ class tushare_api(object):
             data_2017_4.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
         except:
             print('download fund_holdings_2017_4 failed')
-        '''
 
 
         data = data_2017_3.append(data_2017_2).append(data_2017_1)
