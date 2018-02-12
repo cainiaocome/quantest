@@ -18,7 +18,7 @@ if __name__ == '__main__':
     start = '2018-01-15'
     end = today_ISO
     # schedule = sched.scheduler(time.time, time.sleep)
-    sched_Timer = '17:00'
+    sched_Timer = '15:55'
 
     while True:
         now = strftime("%H:%M", localtime())
