@@ -4,11 +4,6 @@ import pandas as pd
 from datetime import *
 import tushare as ts
 
-
-# from sqlalchemy import *
-
-
-
 class tushare_api(object):
     today = datetime.today()
     today_year = datetime.today().year
@@ -45,21 +40,38 @@ class tushare_api(object):
                 {'return code': ['for all stocks'], 'description': ['today_all download failed']})
             self.warning_list = self.warning_list.append(warning_code)
 
+    def downloadIndex(self, start='2017-01-01', end=today):
+        """
+        download the index for today
+        """
+        print('downloading the index for today...')
+        index_000001 = ts.get_h_data('000001', index=True, start=start, end=end)  #上证综指
+        index_399001 = ts.get_h_data('399001', index=True, start=start, end=end)  #深圳成指
+        index_399006 = ts.get_h_data('399006', index=True, start=start, end=end)  #创业板指
+        if not index_000001.empty:
+            filename = 'index_000001'
+            index_000001.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
+        if not index_399001.empty:
+            filename = 'index_399001'
+            index_399001.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
+        if not index_399006.empty:
+            filename = 'index_399006'
+            index_399006.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
+        return
+
     def download_hist_data(self, start='2015-01-05', end='2015-01-09'):
 
         print('downloading the hist_data info to csv...')
         filename = 'today_all'
         today_all = pd.read_excel(io=self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx')
-        # today_all = ts.get_today_all()
         stock_list = sorted(list(today_all.code))
-        # print(stock_list)
         total = 0
         stock_data_all = pd.DataFrame([])
         for stock in stock_list:
             stock = str(stock).zfill(6)
             stock_data_row = ts.get_hist_data(code=stock, pause=1, start=start, end=end)
             if stock_data_row is not None:
-                print('Now downloading stock: ' + stock + ', Total records:' + str(len(stock_data_row)))
+                #print('Now downloading stock: ' + stock + ', Total records:' + str(len(stock_data_row)))
                 total = total + len(stock_data_row)
                 stock_data_row['code'] = float(stock)
                 stock_data_all = stock_data_all.append(stock_data_row)
@@ -80,7 +92,7 @@ class tushare_api(object):
         today_all.set_index(keys=['code'], inplace=True, drop=False)
         hist_data = hist_data[hist_data.date != end]
         for stock in today_all.index:
-            print('Now calculating for stock: ' + str(stock))
+            #print('Now calculating for stock: ' + str(stock))
             today_all.loc[stock, 'yday_percentage'] = 0
             today_all.loc[stock, '2days_percentage'] = 0
             today_all.loc[stock, '3days_percentage'] = 0
@@ -181,7 +193,7 @@ class tushare_api(object):
         hist_data.sort_values(by='date', ascending=False, inplace=True)
         today_all.set_index(keys=['code'], inplace=True, drop=False)
         for stock in today_all.index:
-            print('Now calculating for stock: ' + str(stock))
+            #print('Now calculating for stock: ' + str(stock))
             today_all.loc[stock, 'yday_percentage'] = 0
             today_all.loc[stock, '2days_percentage'] = 0
             today_all.loc[stock, '3days_percentage'] = 0

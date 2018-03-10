@@ -4,6 +4,7 @@ from wxpy import *
 from datetime import *
 import time
 from time import strftime, localtime
+import sys,os
 
 
 def sina_news_notification(bot):
@@ -12,11 +13,12 @@ def sina_news_notification(bot):
     :param: 
     :return: 
     '''
+    path = sys.path[0]
     today_ISO = datetime.today().date().isoformat()
     # initialize the notices_last
     filename = 'notices'
     try:
-        notices_last = pd.read_excel('/Users/yanghui/Documents/tushare/Notices/' + filename + '_' + today_ISO + '.xlsx')
+        notices_last = pd.read_excel('./Notices/' + filename + '_' + today_ISO + '.xlsx')
     except:
         notices_last = pd.DataFrame(columns=['classify',
                                              'title',
@@ -36,7 +38,7 @@ def sina_news_notification(bot):
                 notices_last = notices_last.append(notices[notices.title == title])
                 # load keyword
                 filename = 'key_word'
-                key_word = pd.read_excel(io='/Users/yanghui/Documents/tushare/Notices/' + filename + '.xlsx')
+                key_word = pd.read_excel(io=path + '/Notices/' + filename + '.xlsx')
                 for word in key_word.key_word:
                     if word in title:
                         msg = title + ' - ' + notices[notices.title == title].iloc[0, 3]
@@ -50,7 +52,7 @@ def sina_news_notification(bot):
     # 保存消息
     notices_last.sort_values(by='time', ascending=False, inplace=True)
     filename = 'notices'
-    notices_last.to_excel('/Users/yanghui/Documents/tushare/Notices/' + filename + '_' + today_ISO + '.xlsx',
+    notices_last.to_excel(path + '/Notices/' + filename + '_' + today_ISO + '.xlsx',
                           encoding='GBK')
     return
 
@@ -60,6 +62,7 @@ def M0_notification(bot):
     M0 占比分析消息推送
     :return: 
     '''
+    path = sys.path[0]
     M0_sched_Timer = '15:30'
     today_ISO = datetime.today().date().isoformat()
     now = strftime("%H:%M", localtime())
@@ -70,7 +73,7 @@ def M0_notification(bot):
                                    ], index=["0"])
     filename = '成交量M0占比'
     try:
-        M0_last = pd.read_excel('/Users/yanghui/Documents/sina/' + filename + '.xlsx')
+        M0_last = pd.read_excel(path + '/sina/' + filename + '.xlsx')
     except:
         M0_last = pd.DataFrame(columns=['date',
                                         'M0',
@@ -88,7 +91,7 @@ def M0_notification(bot):
                 M0_index_amount = (index_sh.iloc[0, 5] + index_sz.iloc[0, 5]) / 100000000
                 M0_index_volume = (index_sh.iloc[0, 4] + index_sz.iloc[0, 4]) / 100000000
                 filename = '货币供应量_宏观数据_新浪财经'
-                M0_sina = pd.read_excel('/Users/yanghui/Documents/sina/' + filename + '.xlsx')
+                M0_sina = pd.read_excel('./sina/' + filename + '.xlsx')
                 ##################################
                 M0 = M0_sina.iloc[0, 5]
                 M0_percentage = 100 * M0_index_amount / M0
@@ -109,8 +112,7 @@ def M0_notification(bot):
                 M0_last = M0_last.append(M0_row)
                 M0_last.sort_values(by='date', ascending=False, inplace=True)
                 filename = '成交量M0占比'
-                M0_last.to_excel(
-                    '/Users/yanghui/Documents/sina/' + filename + '.xlsx',
+                M0_last.to_excel(path + '/sina/' + filename + '.xlsx',
                     encoding='GBK')
             else:
                 print(strftime("%Y-%m-%d %H:%M:%S",
@@ -127,7 +129,7 @@ def M1_notification(bot):
     M1 占比分析消息推送
     :return:
     '''
-    M1_sched_Timer = '15:30'
+    path = sys.path[0]
     today_ISO = datetime.today().date().isoformat()
     now = strftime("%H:%M", localtime())
     M1_row = pd.DataFrame(columns=['date',
@@ -137,7 +139,7 @@ def M1_notification(bot):
                                    ], index=["0"])
     filename = '成交量M1占比'
     try:
-        M1_last = pd.read_excel('/Users/yanghui/Documents/sina/' + filename + '.xlsx')
+        M1_last = pd.read_excel(path + '/sina/' + filename + '.xlsx')
     except:
         M1_last = pd.DataFrame(columns=['date',
                                         'M1',
@@ -145,25 +147,27 @@ def M1_notification(bot):
                                         'M1_percentage'
                                         ], index=["0"])
     M1_last_msg_sent_date = M1_last.iloc[0, 0]
-    if now >= M1_sched_Timer and M1_last_msg_sent_date != today_ISO:
+    if M1_last_msg_sent_date != today_ISO:
         try:
             index_sh = ts.get_h_data('000001', index=True, start=today_ISO, end=today_ISO)
             index_sz = ts.get_h_data('399001', index=True, start=today_ISO, end=today_ISO)
-            # index_sh = ts.get_h_data('000001', index=True, start='2017-04-27', end=today_ISO)
-            # index_sz = ts.get_h_data('399001', index=True, start='2017-04-27', end=today_ISO)
-            if len(index_sh) > 0 and len(index_sz) > 0:
+            if (not index_sh.empty) and (not index_sz.empty):
                 M1_index_amount = (index_sh.iloc[0, 5] + index_sz.iloc[0, 5]) / 100000000
                 M1_index_volume = (index_sh.iloc[0, 4] + index_sz.iloc[0, 4]) / 100000000
                 filename = '货币供应量_宏观数据_新浪财经'
-                M1_sina = pd.read_excel('/Users/yanghui/Documents/sina/' + filename + '.xlsx')
+                M1_sina = pd.read_excel(path + '/sina/' + filename + '.xlsx')
                 ##################################
+                M0 = M1_sina.iloc[0, 5]
+                M0_percentage = 100 * M1_index_amount / M0
                 M1 = M1_sina.iloc[0, 3]
                 M1_percentage = 100 * M1_index_amount / M1
 
                 msg = today_ISO + ' - \n' + \
                       '两市总成交额：' + str(round(M1_index_amount, 3)) + '（亿）\n' + \
                       '两市总成交量：' + str(round(M1_index_volume, 3)) + '（亿）\n' + \
+                      'M0：' + str(M0) + '（亿）\n' + \
                       'M1：' + str(M1) + '（亿）\n' + \
+                      '两市总成交额占M0：' + str(round(M0_percentage, 3)) + '% \n' \
                       '两市总成交额占M1：' + str(round(M1_percentage, 3)) + '%'
                 bot.friends().search('Yang Hui')[0].send(msg)
                 bot.friends().search('欣')[0].send(msg)
@@ -176,15 +180,11 @@ def M1_notification(bot):
                 M1_last = M1_last.append(M1_row)
                 M1_last.sort_values(by='date', ascending=False, inplace=True)
                 filename = '成交量M1占比'
-                M1_last.to_excel(
-                    '/Users/yanghui/Documents/sina/' + filename + '.xlsx',
+                M1_last.to_excel(path + '/sina/' + filename + '.xlsx',
                     encoding='GBK')
             else:
-                print(strftime("%Y-%m-%d %H:%M:%S",
-                               localtime()) + '-Warning: index not available today')
+                pass
         except:
-            #print(strftime("%Y-%m-%d %H:%M:%S",
-            #               localtime()) + '-Warning: get index failed, index not available today')
             pass
     return
 
@@ -217,7 +217,6 @@ if __name__ == '__main__':
     send to wechat for different kind of notifications
 
     """
-
     # 登陆wechat
     bot = Bot()
     # msg = 'Hello from wechat_bot! Happy trading! Today is: ' + today_ISO
@@ -226,10 +225,10 @@ if __name__ == '__main__':
 
     while True:
         ##############################################################################################################
-        try:
-            sina_news_notification(bot)
-        except:
-            print(strftime("%Y-%m-%d %H:%M:%S", localtime()) + '-Warning: sina_news_notification failed!')
+        #try:
+        #    sina_news_notification(bot)
+        #except:
+        #    print(strftime("%Y-%m-%d %H:%M:%S", localtime()) + '-Warning: sina_news_notification failed!')
         ##############################################################################################################
         #try:
         #    M0_notification(bot)
@@ -246,5 +245,5 @@ if __name__ == '__main__':
         #except:
         #    print(strftime("%Y-%m-%d %H:%M:%S", localtime()) + '-Warning: open_limit_notification failed!')
         ##############################################################################################################
-        # 60秒重试
-        time.sleep(60)
+        # 5分钟重试
+        time.sleep(300)
