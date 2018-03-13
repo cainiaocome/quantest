@@ -93,6 +93,7 @@ class TushareApiRsi():
 
     def calculateHindenburgOmen(self, start='2018-01-01', timeperiod=30):
         print('start calculate the Hindenburg Omen...')
+        today_ISO = datetime.today().date().isoformat()
         # read file - today_all_roe_pb_rsi
         filename = 'today_all_roe_pb_rsi'
         today_all_roe_pb = pd.read_excel(io=self.working_folder + \
@@ -162,7 +163,11 @@ class TushareApiRsi():
         filename = 'today_all_R_square'
         today_all_roe_pb.to_excel(self.working_folder + \
         'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
-        print('calculate the R_square successful ' + str(total))
+
+        # backup the file everyday for future review
+        filename = 'today_all_R_square' + '_' + today_ISO
+        today_all_roe_pb.to_excel(self.working_folder + \
+        'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
 
         today_all_roe_pb = today_all_roe_pb[today_all_roe_pb.R_square_30days.notnull()]
         today_all_roe_pb_000001 = today_all_roe_pb[today_all_roe_pb.code >= '600001'].R_square_30days.values
@@ -179,8 +184,6 @@ class TushareApiRsi():
                                 'hindenburg_omen_399006',
                                 'notification_sent'
                                 ], index=["0"])
-
-        today_ISO = datetime.today().date().isoformat()
 
         path = sys.path[0] + '/notification_monitoring_files/'
         filename = 'hindenburg_omen'
@@ -200,4 +203,5 @@ class TushareApiRsi():
         hindenburg_omen_last.sort_values(by='date', ascending=False, inplace=True)
         hindenburg_omen_last.to_excel(path + filename + '.xlsx',
                     encoding='GBK')
+        print('calculate the Hindenburg Omen successful ' + str(total))
         return

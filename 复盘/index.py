@@ -25,7 +25,7 @@ if __name__ == '__main__':
     index_sz = pd.read_excel(io=working_folder + \
          'SPSS modeler/复盘/' + filename + '.xlsx')
 
-    money_supply = pd.read_excel(path + '/sina/货币供应量_宏观数据_新浪财经.xlsx')
+    money_supply = pd.read_excel(path + '/notification_monitoring_files/货币供应量_宏观数据_新浪财经.xlsx')
     index_sh['date_str'] = index_sh['date'].apply(lambda x: str(x))
     index_sh = index_sh.sort_values(by='date')
     index_sz['date_str'] = index_sz['date'].apply(lambda x: str(x))

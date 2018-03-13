@@ -125,7 +125,7 @@ def M1_notification(bot):
 
                 #发送消息
                 bot.friends().search('Yang Hui')[0].send(msg)
-                #bot.friends().search('欣')[0].send(msg)   #TODO:
+                bot.friends().search('欣')[0].send(msg)  
             else:
                 pass
         except:
@@ -158,6 +158,7 @@ def hindenburgOmenNotification(bot):
                     encoding='GBK')
         #发送消息
         bot.friends().search('Yang Hui')[0].send(msg)
+        bot.friends().search('欣')[0].send(msg)  
     return
 
 

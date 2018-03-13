@@ -23,4 +23,7 @@ if __name__ == '__main__':
     #today_ISO = datetime.today().date().isoformat()
     #tushare_api().downloadIndex(end=today_ISO)
     #TushareApiRsi().calculate_rsi()
-    TushareApiRsi().calculateHindenburgOmen()
+    closeX = [10, 11, 12.1]  # mean:11.033333
+    closeY = [3307, 3637.7, 4001.47]   mean: 3648.72033333
+    print(TushareApiRsi().computeCorrelation(closeX, closeY))
+    

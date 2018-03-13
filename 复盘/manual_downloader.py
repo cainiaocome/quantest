@@ -16,6 +16,7 @@ if __name__ == '__main__':
     # download today's stock price
     ######################################
     #api.download_today_all()
+    api.downloadIndex(end=end)
     #api.download_hist_data(start=start, end=end)
     #api.calculate_today_all_with_percentage(start=start, end=end)
     #api.calculate_today_all_without_percentage(start=start, end=end)
@@ -27,20 +28,20 @@ if __name__ == '__main__':
     ######################################
     # download the stock fundamental information
     ######################################
-    api.download_stock_basics()
-    try:
-        api.download_report_data()
-    except:
-        print('download_report_data failed!')
-    api.download_profit_data()
-    api.download_operation_data()
-    api.download_growth_data()
-    api.download_debtpaying_data()
-    api.download_cashflow_data()
-    api.download_stock_fundamentals(year=2017)
-    api.format_stock_fundamentals()
-    api.merge_stock_fundamentals(year=2017)
-    api.calculate_roe_pb()
+    #api.download_stock_basics()
+    #try:
+    #    api.download_report_data()
+    #except:
+    #    print('download_report_data failed!')
+    #api.download_profit_data()
+    #api.download_operation_data()
+    #api.download_growth_data()
+    #api.download_debtpaying_data()
+    #api.download_cashflow_data()
+    #api.download_stock_fundamentals(year=2017)
+    #api.format_stock_fundamentals()
+    #api.merge_stock_fundamentals(year=2017)
+    #api.calculate_roe_pb()
 
     ######################################
     # download the 投资参考数据

@@ -314,7 +314,7 @@ class tushare_api(object):
         today_all['yday_volume/10days_average_volume'] = None
 
         for stk in today_all.index:
-            print(strftime("%Y-%m-%d %H:%M:%S", localtime()) + ' - Now calculating: ' + str(stk))
+            #print(strftime("%Y-%m-%d %H:%M:%S", localtime()) + ' - Now calculating: ' + str(stk))
             report_data_code = report_data[report_data.code == stk]
             if len(report_data_code) > 0:
                 report_data_code.sort_values(by='report_date', inplace=True)
