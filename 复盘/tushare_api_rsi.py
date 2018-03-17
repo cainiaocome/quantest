@@ -46,7 +46,7 @@ class TushareApiRsi():
             field_name = 'rsi_' + str(timeperiod) + 'days'
             today_all_roe_pb.loc[stock, field_name] = 50
             if not hist_data_stock.empty:
-                close = hist_data_stock['close'].values
+                close = hist_data_stock['close'].tail(timeperiod + 1).values
                 stock_rsi = talib.RSI(close, timeperiod)[-1]
                 today_all_roe_pb.loc[stock, field_name] = stock_rsi
 
@@ -55,7 +55,7 @@ class TushareApiRsi():
             field_name = 'rsi_' + str(timeperiod) + 'days'
             today_all_roe_pb.loc[stock, field_name] = 50
             if not hist_data_stock.empty:
-                close = hist_data_stock['close'].values
+                close = hist_data_stock['close'].tail(timeperiod + 1).values
                 stock_rsi = talib.RSI(close, timeperiod)[-1]
                 today_all_roe_pb.loc[stock, field_name] = stock_rsi
 
@@ -64,7 +64,7 @@ class TushareApiRsi():
             field_name = 'rsi_' + str(timeperiod) + 'days'
             today_all_roe_pb.loc[stock, field_name] = 50
             if not hist_data_stock.empty:
-                close = hist_data_stock['close'].values
+                close = hist_data_stock['close'].tail(timeperiod + 1).values
                 stock_rsi = talib.RSI(close, timeperiod)[-1]
                 today_all_roe_pb.loc[stock, field_name] = stock_rsi
 
@@ -91,7 +91,7 @@ class TushareApiRsi():
         SST = math.sqrt(varX * varY)  
         return SSR / SST  
 
-    def calculateHindenburgOmen(self, start='2018-01-01', timeperiod=30):
+    def calculateHindenburgOmen(self, start='2018-01-01', timeperiod=5):
         print('start calculate the Hindenburg Omen...')
         today_ISO = datetime.today().date().isoformat()
         # read file - today_all_roe_pb_rsi
@@ -128,36 +128,37 @@ class TushareApiRsi():
             #print('Now calculating R_square for stock: ' + str(stock))
             total = total + 1
             hist_data_stock = hist_data[hist_data.code == stock].head(timeperiod)
-            hist_data_stock.set_index(keys=['date'], inplace=True, drop=False)
+            if len(hist_data_stock) > 2:    # fix the issue when there's only 2 value, the R_square is always equal 1.
+                hist_data_stock.set_index(keys=['date'], inplace=True, drop=False)
 
-            # Calculate R_square for 30 biz days
-            field_name = 'R_square_' + str(timeperiod) + 'days'
-            if stock >= '600001':
-                index_000001_stock = pd.merge(index_000001, hist_data_stock, how='left', left_index=True, right_index=True, suffixes=('_x', '_y'))
-                index_000001_stock = index_000001_stock[index_000001_stock.close_y.notnull()]
-                if not index_000001_stock.empty:
-                    closeX = index_000001_stock['close_x'].values
-                    closeY = index_000001_stock['close_y'].values
-                    R_square = self.computeCorrelation(closeX, closeY)
-                    today_all_roe_pb.loc[stock, field_name] = R_square
+                # Calculate R_square for n biz days
+                field_name = 'R_square_' + str(timeperiod) + 'days'
+                if stock >= '600001':
+                    index_000001_stock = pd.merge(index_000001, hist_data_stock, how='left', left_index=True, right_index=True, suffixes=('_x', '_y'))
+                    index_000001_stock = index_000001_stock[index_000001_stock.close_y.notnull()]
+                    if not index_000001_stock.empty:
+                        closeX = index_000001_stock['close_x'].values
+                        closeY = index_000001_stock['close_y'].values
+                        R_square = self.computeCorrelation(closeX, closeY)
+                        today_all_roe_pb.loc[stock, field_name] = R_square
 
-            if stock >= '000001' and stock < '300000':
-                index_399001_stock = pd.merge(index_399001, hist_data_stock, how='left', left_index=True, right_index=True, suffixes=('_x', '_y'))
-                index_399001_stock = index_399001_stock[index_399001_stock.close_y.notnull()]
-                if not index_399001_stock.empty:
-                    closeX = index_399001_stock['close_x'].values
-                    closeY = index_399001_stock['close_y'].values
-                    R_square = self.computeCorrelation(closeX, closeY)
-                    today_all_roe_pb.loc[stock, field_name] = R_square
+                if stock >= '000001' and stock < '300000':
+                    index_399001_stock = pd.merge(index_399001, hist_data_stock, how='left', left_index=True, right_index=True, suffixes=('_x', '_y'))
+                    index_399001_stock = index_399001_stock[index_399001_stock.close_y.notnull()]
+                    if not index_399001_stock.empty:
+                        closeX = index_399001_stock['close_x'].values
+                        closeY = index_399001_stock['close_y'].values
+                        R_square = self.computeCorrelation(closeX, closeY)
+                        today_all_roe_pb.loc[stock, field_name] = R_square
 
-            if stock >= '300001' and stock < '600000':
-                index_399006_stock = pd.merge(index_399006, hist_data_stock, how='left', left_index=True, right_index=True, suffixes=('_x', '_y'))
-                index_399006_stock = index_399006_stock[index_399006_stock.close_y.notnull()]
-                if not index_399006_stock.empty:
-                    closeX = index_399006_stock['close_x'].values
-                    closeY = index_399006_stock['close_y'].values
-                    R_square = self.computeCorrelation(closeX, closeY)
-                    today_all_roe_pb.loc[stock, field_name] = R_square
+                if stock >= '300001' and stock < '600000':
+                    index_399006_stock = pd.merge(index_399006, hist_data_stock, how='left', left_index=True, right_index=True, suffixes=('_x', '_y'))
+                    index_399006_stock = index_399006_stock[index_399006_stock.close_y.notnull()]
+                    if not index_399006_stock.empty:
+                        closeX = index_399006_stock['close_x'].values
+                        closeY = index_399006_stock['close_y'].values
+                        R_square = self.computeCorrelation(closeX, closeY)
+                        today_all_roe_pb.loc[stock, field_name] = R_square
             
         # save result
         filename = 'today_all_R_square'
@@ -169,10 +170,10 @@ class TushareApiRsi():
         today_all_roe_pb.to_excel(self.working_folder + \
         'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
 
-        today_all_roe_pb = today_all_roe_pb[today_all_roe_pb.R_square_30days.notnull()]
-        today_all_roe_pb_000001 = today_all_roe_pb[today_all_roe_pb.code >= '600001'].R_square_30days.values
-        today_all_roe_pb_399001 = today_all_roe_pb[(today_all_roe_pb.code >= '000001') & (today_all_roe_pb.code < '300000')].R_square_30days.values
-        today_all_roe_pb_399006 = today_all_roe_pb[(today_all_roe_pb.code >= '300001') & (today_all_roe_pb.code < '600000')].R_square_30days.values
+        today_all_roe_pb = today_all_roe_pb[today_all_roe_pb.R_square_5days.notnull()]
+        today_all_roe_pb_000001 = today_all_roe_pb[today_all_roe_pb.code >= '600001'].R_square_5days.values
+        today_all_roe_pb_399001 = today_all_roe_pb[(today_all_roe_pb.code >= '000001') & (today_all_roe_pb.code < '300000')].R_square_5days.values
+        today_all_roe_pb_399006 = today_all_roe_pb[(today_all_roe_pb.code >= '300001') & (today_all_roe_pb.code < '600000')].R_square_5days.values
 
         hindenburg_omen_000001 = np.mean(today_all_roe_pb_000001) 
         hindenburg_omen_399001 = np.mean(today_all_roe_pb_399001) 

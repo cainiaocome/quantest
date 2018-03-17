@@ -179,11 +179,11 @@ class tushare_api(object):
         filename = 'today_all_with_percentage'
         today_all.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
         print('today_all_with_percentage successful ')
-
+        return
     
     def calculate_today_all_without_percentage(self, start='2015-01-05', end='2015-01-09'):
 
-        print('Calculating calculate_today_all_without_percentage')
+        print('Start calculate_today_all_without_percentage')
         filename = 'today_all'
         today_all = pd.read_excel(io=self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx')
         today_all['code'] = today_all['code'].map(lambda x: str(x).zfill(6))
@@ -326,7 +326,7 @@ class tushare_api(object):
                 pb = today_all.loc[stk, 'pb']
                 if pb > 0:
                     today_all.loc[stk, 'roe/pb'] = roe_mean / pb
-                volume = today_all.loc[stk, 'volume']
+                volume = today_all.loc[stk, '10days_volume']
                 if volume > 0:
                     today_all.loc[stk, 'yday_volume/10days_average_volume'] = (10 * today_all.loc[
                         stk, 'yday_volume']) / (today_all.loc[stk, '10days_volume'])
@@ -848,11 +848,12 @@ class tushare_api(object):
             self.warning_list = self.warning_list.append(warning_code)
 
     def download_stock_D1(self):
-
+        """
+        下载日线数据
+        """
         print('downloading the stock daily info...')
         stock_basics = ts.get_today_all()
         stock_list = sorted(list(stock_basics.code.values))
-        #print(stock_list)
         total = 0
         file_path = self.working_folder + 'tushare/StockDaily/'
         for stock in stock_list:
@@ -893,6 +894,9 @@ class tushare_api(object):
         print('download_stock_D1 successful ' + str(total))
 
     def download_stock_D1_qfq(self):
+        """
+        下载日线数据（前复权）
+        """
 
         print('downloading the stock daily info...')
         stock_basics = ts.get_today_all()
@@ -936,6 +940,41 @@ class tushare_api(object):
             print('downloading-' + stock + ' for the lost data...after count: ' + str(len(stock_data)))
 
         print('download_stock_D1_qfq successful ' + str(total))
+        return
+
+    def download_stock_W1_qfq(self):
+        """
+        下载周线数据（前复权）
+        """
+
+        print('downloading the stock weekly data...')
+        filename = 'today_all'
+        today_all = pd.read_excel(io=self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx')
+        today_all['code'] = today_all['code'].map(lambda x: str(x).zfill(6))
+        stock_list = sorted(list(today_all.code))
+
+        total = 0
+        stock_data = pd.DataFrame([])
+        for stock in stock_list:
+            year = 2018
+            while year <= self.today_year:
+                start_date = str(year) + '-01-01'
+                end_date = str(year) + '-12-31'
+                try:
+                    stock_data_latest = ts.get_k_data(stock, ktype='W', autype='qfq', start=start_date, end=end_date)
+                    stock_data = stock_data.append(stock_data_latest)
+                except:
+                    pass
+                year = year + 1
+            total = total + 1
+            print('downloading-' + stock + ' for the weekly data, total count: ' + str(len(stock_data)))
+
+        filename = 'hist_data_weekly_qfq.xlsx'
+        file_path = self.working_folder + 'SPSS modeler/复盘/'
+        stock_data.to_excel(file_path + filename)
+        print('download_stock_W1_qfq successful ' + str(total))
+        return
+
 
     def download_stock_fundamentals(self, year=2000):
         """

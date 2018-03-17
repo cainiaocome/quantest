@@ -103,8 +103,7 @@ def marketAnalysis(time_period=14):
 
 
     try:
-        index_000001 = hindenburgOmen()[0]
-
+        index_000001 = hindenburgOmen(index='000001').tail(20)
         axes[0, 0].set_title(u'兴登堡凶兆（上证指数）')
         axes[0, 0].grid(color='white', which='both', linestyle='-', linewidth=0.4)
         axes[0, 0].set_ylabel('R_square')
@@ -119,7 +118,7 @@ def marketAnalysis(time_period=14):
     
 
     try:
-        index_399001 = hindenburgOmen()[1]
+        index_399001 = hindenburgOmen(index='399001').tail(20)
 
         axes[0, 1].set_title(u'兴登堡凶兆（深证成指）')
         axes[0, 1].grid(color='white', which='both', linestyle='-', linewidth=0.4)
@@ -134,7 +133,7 @@ def marketAnalysis(time_period=14):
         pass
 
     try:
-        index_399006 = hindenburgOmen()[2]
+        index_399006 = hindenburgOmen(index='399006').tail(20)
 
         axes[0, 2].set_title(u'兴登堡凶兆（创业板指）')
         axes[0, 2].grid(color='white', which='both', linestyle='-', linewidth=0.4)
@@ -149,7 +148,7 @@ def marketAnalysis(time_period=14):
         pass
 
     try:
-        money_supply = moneySupply()
+        money_supply = moneySupply().tail(20)
         axes[0, 3].set_title(u'成交量占比')
         axes[0, 3].grid(color='white', which='both', linestyle='-', linewidth=0.4)
         axes[0, 3].set_ylabel('成交量占M0/M1百分比')
@@ -219,7 +218,7 @@ def topStockAnalysis(count=20):
 
     try:
         top_stock = topStock(count=count, time_period=14, top_industry=False)
-        axes[0, 0].set_title(u'14日热门股票')
+        axes[0, 0].set_title(u'趋势跟踪 - 14日热门股票')
         axes[0, 0].grid(color='white', which='both', linestyle='-', linewidth=0.4)
         axes[0, 0].barh(top_stock['name'] + '(' + top_stock['industry'] + ')', top_stock['rsi_14days'], color='red')
         axes[0, 0].set_xlim([0, 100])
@@ -228,7 +227,7 @@ def topStockAnalysis(count=20):
 
     try:
         top_stock = topStock(count=count, time_period=10, top_industry=False)
-        axes[0, 1].set_title(u'10日热门股票')
+        axes[0, 1].set_title(u'趋势跟踪 - 10日热门股票')
         axes[0, 1].grid(color='white', which='both', linestyle='-', linewidth=0.4)
         axes[0, 1].barh(top_stock['name'] + '(' + top_stock['industry'] + ')', top_stock['rsi_10days'], color='red')
         axes[0, 1].set_xlim([0, 100])
@@ -237,54 +236,67 @@ def topStockAnalysis(count=20):
 
     try:
         top_stock = topStock(count=count, time_period=5, top_industry=False)
-        axes[0, 2].set_title(u'5日热门股票')
+        axes[0, 2].set_title(u'趋势跟踪 - 5日热门股票')
         axes[0, 2].grid(color='white', which='both', linestyle='-', linewidth=0.4)
         axes[0, 2].barh(top_stock['name'] + '(' + top_stock['industry'] + ')', top_stock['rsi_5days'], color='red')
         axes[0, 2].set_xlim([0, 100])
     except:
         pass
 
+
+    # 14 days RSI < 60 and 5 days RSI > 70
+    try:
+        top_stock = topStock(count=count, time_period=5, top_industry=False, rsi_min=50)
+        axes[1, 0].set_title(u'趋势反转 - 14日RSI < 50 & 5日RSI > 70')
+        axes[1, 0].grid(color='white', which='both', linestyle='-', linewidth=0.4)
+        axes[1, 0].barh(top_stock['name'] + '(' + top_stock['industry'] + ')', top_stock['rsi_5days'], color='red')
+        axes[1, 0].set_xlim([0, 100])
+    except:
+        pass
+
+
     plt.show()
     return
 
-def hindenburgOmen():
+def hindenburgOmen(index='000001'):
     path = '/Users/huiyang/Documents/quantest/复盘/notification_monitoring_files/'
     filename = 'hindenburg_omen'
     hindenburg_omen = pd.read_excel(path + filename + '.xlsx')
     working_folder = '/Users/huiyang/Documents/'
 
+
     # read index
-    filename = 'index_000001'
-    index_000001 = pd.read_excel(io=working_folder + \
-         'SPSS modeler/复盘/' + filename + '.xlsx')
-    index_000001['date'] = index_000001['date'].map(lambda x: x.isoformat()[:10])
+    if index == '000001':
+        filename = 'index_000001'
+        index_000001 = pd.read_excel(io=working_folder + \
+             'SPSS modeler/复盘/' + filename + '.xlsx')
+        index_000001['date'] = index_000001['date'].map(lambda x: x.isoformat()[:10])
+        index_000001 = pd.merge(index_000001, hindenburg_omen, how='left', left_on='date', right_on='date', suffixes=('_x', '_y'))
+        index_000001['close_adjust'] = index_000001['close'].map(lambda x: x/10000)
+        index_000001.sort_values(by='date', ascending=True, inplace=True)
+        index_df = index_000001
 
-    filename = 'index_399001'
-    index_399001 = pd.read_excel(io=working_folder + \
-         'SPSS modeler/复盘/' + filename + '.xlsx')
-    index_399001['date'] = index_399001['date'].map(lambda x: x.isoformat()[:10])
+    if index == '399001':
+        filename = 'index_399001'
+        index_399001 = pd.read_excel(io=working_folder + \
+            'SPSS modeler/复盘/' + filename + '.xlsx')
+        index_399001['date'] = index_399001['date'].map(lambda x: x.isoformat()[:10])
+        index_399001 = pd.merge(index_399001, hindenburg_omen, how='left', left_on='date', right_on='date', suffixes=('_x', '_y'))
+        index_399001['close_adjust'] = index_399001['close'].map(lambda x: x/20000)
+        index_399001.sort_values(by='date', ascending=True, inplace=True)
+        index_df = index_399001
 
-    filename = 'index_399006'
-    index_399006 = pd.read_excel(io=working_folder + \
-         'SPSS modeler/复盘/' + filename + '.xlsx')
-    index_399006['date'] = index_399006['date'].map(lambda x: x.isoformat()[:10])
+    if index == '399006':
+        filename = 'index_399006'
+        index_399006 = pd.read_excel(io=working_folder + \
+             'SPSS modeler/复盘/' + filename + '.xlsx')
+        index_399006['date'] = index_399006['date'].map(lambda x: x.isoformat()[:10])
+        index_399006 = pd.merge(index_399006, hindenburg_omen, how='left', left_on='date', right_on='date', suffixes=('_x', '_y'))
+        index_399006['close_adjust'] = index_399006['close'].map(lambda x: x/10000)
+        index_399006.sort_values(by='date', ascending=True, inplace=True)
+        index_df = index_399006
 
-    index_000001 = pd.merge(index_000001, hindenburg_omen, how='left', left_on='date', right_on='date', suffixes=('_x', '_y'))
-    index_000001['close_adjust'] = index_000001['close'].map(lambda x: x/10000)
-    index_000001.sort_values(by='date', ascending=True, inplace=True)
-    #index_000001 = index_000001.tail(90)
-
-    index_399001 = pd.merge(index_399001, hindenburg_omen, how='left', left_on='date', right_on='date', suffixes=('_x', '_y'))
-    index_399001['close_adjust'] = index_399001['close'].map(lambda x: x/20000)
-    index_399001.sort_values(by='date', ascending=True, inplace=True)
-    #index_399001 = index_399001.tail(90)
-
-    index_399006 = pd.merge(index_399006, hindenburg_omen, how='left', left_on='date', right_on='date', suffixes=('_x', '_y'))
-    index_399006['close_adjust'] = index_399006['close'].map(lambda x: x/10000)
-    index_399006.sort_values(by='date', ascending=True, inplace=True)
-    #index_399006 = index_399006.tail(90)
-
-    return index_000001, index_399001, index_399006
+    return index_df
 
 
 def moneySupply():
@@ -348,7 +360,7 @@ def topIndustry(count=20, time_period=14):
     top_industry = top_industry.head(count)
     return top_industry
 
-def topStock(count=10, time_period=5, top_industry=False):
+def topStock(count=10, time_period=5, top_industry=False, rsi_min=0, rsi_max=0):
     """
     列出最热门的行业的热门股票，按RSI排名
     """
@@ -374,6 +386,9 @@ def topStock(count=10, time_period=5, top_industry=False):
     market_date = (date.today() - dateutil.relativedelta.relativedelta(days=30)).isoformat()
     today_all_roe_pb_rsi['timeToMarket'] = today_all_roe_pb_rsi['timeToMarket'].map(lambda x: str(x)[:4] + '-' + str(x)[4:2] + '-' + str(x)[6:2])
     today_all_roe_pb_rsi = today_all_roe_pb_rsi[today_all_roe_pb_rsi.timeToMarket < market_date]
+
+    if rsi_min > 0:
+        today_all_roe_pb_rsi = today_all_roe_pb_rsi[today_all_roe_pb_rsi.rsi_14days <= rsi_min]
 
     today_all_roe_pb_rsi = today_all_roe_pb_rsi.head(count)
     return today_all_roe_pb_rsi

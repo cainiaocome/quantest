@@ -145,7 +145,8 @@ if __name__ == '__main__':
             # refresh tushare daily stock data
             ######################################
             try:
-                api.download_stock_D1()
+                #api.download_stock_D1()
+                api.download_stock_W1_qfq()
                 api.download_stock_D1_qfq()
             except:
                 print('download_stock_D1 failed!')

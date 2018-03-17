@@ -9,15 +9,15 @@ if __name__ == '__main__':
     today_ISO = datetime.today().date().isoformat()
 
     api = tushare_api()
-    start = '2017-10-01'
+    start = '2018-02-14'
     end = today_ISO
     #end = '2017-03-24'
     ######################################
     # download today's stock price
     ######################################
     #api.download_today_all()
-    api.downloadIndex(end=end)
-    #api.download_hist_data(start=start, end=end)
+    #api.downloadIndex(end=end)
+    api.download_hist_data(start=start, end=end)
     #api.calculate_today_all_with_percentage(start=start, end=end)
     #api.calculate_today_all_without_percentage(start=start, end=end)
     #api.download_industry_classified()
@@ -58,6 +58,7 @@ if __name__ == '__main__':
     ######################################
     #api.download_stock_D1()
     #api.download_stock_D1_qfq()
+    #api.download_stock_W1_qfq()
 
     ######################################
     # update rqalpha data bundle

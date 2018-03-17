@@ -5,8 +5,7 @@ from datetime import *
 from time import strftime, localtime, sleep
 import tushare as ts
 from tushare_api import tushare_api
-
-
+import rqalpha
 from tushare_api_rsi import TushareApiRsi
 
 if __name__ == '__main__':
@@ -23,7 +22,8 @@ if __name__ == '__main__':
     #today_ISO = datetime.today().date().isoformat()
     #tushare_api().downloadIndex(end=today_ISO)
     #TushareApiRsi().calculate_rsi()
-    closeX = [10, 11, 12.1]  # mean:11.033333
-    closeY = [3307, 3637.7, 4001.47]   mean: 3648.72033333
-    print(TushareApiRsi().computeCorrelation(closeX, closeY))
+    TushareApiRsi().calculateHindenburgOmen()
+    #closeX = [10, 10000000, 10]  # mean:11.033333
+    #closeY = [3307, 3637.7, 3637.7]   #mean: 3648.72033333
+    #print(TushareApiRsi().computeCorrelation(closeX, closeY))
     
