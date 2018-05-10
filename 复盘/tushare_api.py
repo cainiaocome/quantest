@@ -31,6 +31,7 @@ class tushare_api(object):
         print('downloading the today_all info...')
         total = 0
         stock_data = ts.get_today_all()
+        stock_data.drop_duplicates(subset=['code'], keep='first', inplace=True)
         if stock_data is not None:
             print('Now downloading today_all, total records:' + str(len(stock_data)))
             filename = 'today_all'
@@ -61,17 +62,18 @@ class tushare_api(object):
 
     def download_hist_data(self, start='2015-01-05', end='2015-01-09'):
 
-        print('downloading the hist_data info to csv...')
+        print('downloading the hist_data info to excel...')
         filename = 'today_all'
         today_all = pd.read_excel(io=self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx')
         stock_list = sorted(list(today_all.code))
+        print(stock_list)
         total = 0
         stock_data_all = pd.DataFrame([])
         for stock in stock_list:
             stock = str(stock).zfill(6)
             stock_data_row = ts.get_hist_data(code=stock, pause=1, start=start, end=end)
             if stock_data_row is not None:
-                #print('Now downloading stock: ' + stock + ', Total records:' + str(len(stock_data_row)))
+                print('Now downloading stock: ' + stock + ', Total records:' + str(len(stock_data_row)))
                 total = total + len(stock_data_row)
                 stock_data_row['code'] = float(stock)
                 stock_data_all = stock_data_all.append(stock_data_row)

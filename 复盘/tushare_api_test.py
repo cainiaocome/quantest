@@ -15,11 +15,15 @@ if __name__ == '__main__':
     ######################################
     # download today's stock price
     ######################################
-    #api.download_today_all()
+    api.download_today_all()
     #api.downloadIndex(end=end)
-    api.download_hist_data(start=start, end=end)
-    #api.calculate_today_all_with_percentage(start=start, end=end)
-    #api.calculate_today_all_without_percentage(start=start, end=end)
+    #api.download_hist_data(start=start, end=end)
+    #try:
+    #    os.system('python3 /Users/huiyang/Documents/quantest/risk_management/update_portfolio_v1.0.py')
+    #except:
+    #    print('update_portfolio_v1.0.py failed')
+    api.calculate_today_all_with_percentage(start=start, end=end)
+    api.calculate_today_all_without_percentage(start=start, end=end)
     #api.download_industry_classified()
     #api.download_concept_classified()
     #api.download_area_classified()

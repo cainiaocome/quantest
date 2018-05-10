@@ -58,62 +58,60 @@ if __name__ == '__main__':
         for code in portfolio_open.index:
             #hist_data = hist_data[hist_data.code == code]
             hist_data_stock = hist_data[(hist_data.code == code) & (hist_data.date == today_ISO)]
-            today_all_stock = today_all[(today_all.code == code)]
+            if not hist_data_stock.empty:
+                today_all_stock = today_all[(today_all.code == code)]
             
-            # generate the 'weekly_ATR'
-            hist_data_weekly_qfq_stock = hist_data_weekly_qfq[(hist_data_weekly_qfq.code == code)].head(5)
-            hist_data_weekly_qfq_stock['weekly_ATR'] = 0
-            if len(hist_data_weekly_qfq_stock) >= 2:
-                i = 1
-                while i + 1 <= len(hist_data_weekly_qfq_stock):
-                    hist_data_weekly_qfq_stock.iloc[i, 7] = (hist_data_weekly_qfq_stock.iloc[i, 3] - hist_data_weekly_qfq_stock.iloc[i, 4])/hist_data_weekly_qfq_stock.iloc[i - 1, 2]
-                    i = i + 1
-            hist_data_weekly_qfq_stock = hist_data_weekly_qfq_stock[(hist_data_weekly_qfq_stock.weekly_ATR > 0)]
-            weekly_ATR = hist_data_weekly_qfq_stock['weekly_ATR'].mean()
+                # generate the 'weekly_ATR'
+                hist_data_weekly_qfq_stock = hist_data_weekly_qfq[(hist_data_weekly_qfq.code == code)].head(5)
+                hist_data_weekly_qfq_stock['weekly_ATR'] = 0
+                if len(hist_data_weekly_qfq_stock) >= 2:
+                    i = 1
+                    while i + 1 <= len(hist_data_weekly_qfq_stock):
+                        hist_data_weekly_qfq_stock.iloc[i, 7] = (hist_data_weekly_qfq_stock.iloc[i, 3] - hist_data_weekly_qfq_stock.iloc[i, 4])/hist_data_weekly_qfq_stock.iloc[i - 1, 2]
+                        i = i + 1
+                hist_data_weekly_qfq_stock = hist_data_weekly_qfq_stock[(hist_data_weekly_qfq_stock.weekly_ATR > 0)]
+                weekly_ATR = hist_data_weekly_qfq_stock['weekly_ATR'].mean()
 
-            # compose update fields - weekly_ATR
-            portfolio_open.loc[code, 'weekly_ATR'] = str(round((100 * weekly_ATR), 3)) + '%'
+                # compose update fields - weekly_ATR
+                portfolio_open.loc[code, 'weekly_ATR'] = str(round((100 * weekly_ATR), 3)) + '%'
 
-            # compose update fields - name
-            portfolio_open.loc[code, 'name'] = today_all_stock.iloc[0, 1]
+                # compose update fields - name
+                portfolio_open.loc[code, 'name'] = today_all_stock.iloc[0, 1]
                         
-            # compose update fields - price_current
-            if not hist_data_stock.empty:
-                portfolio_open.loc[code, 'price_current'] = hist_data_stock.iloc[0, 1]
+                # compose update fields - price_current
+                if not hist_data_stock.empty:
+                    portfolio_open.loc[code, 'price_current'] = hist_data_stock.iloc[0, 1]
 
-            # compose update fields - price_highest
-            if not hist_data_stock.empty:
-                if portfolio_open.isnull().loc[code, 'price_highest']:
-                    portfolio_open.loc[code, 'price_highest'] = hist_data_stock.iloc[0, 3]
-                else:
-                    if hist_data_stock.iloc[0, 3] > portfolio_open.loc[code, 'price_highest']:
+                # compose update fields - price_highest
+                if not hist_data_stock.empty:
+                    if portfolio_open.isnull().loc[code, 'price_highest']:
                         portfolio_open.loc[code, 'price_highest'] = hist_data_stock.iloc[0, 3]
+                    else:
+                        if hist_data_stock.iloc[0, 3] > portfolio_open.loc[code, 'price_highest']:
+                            portfolio_open.loc[code, 'price_highest'] = hist_data_stock.iloc[0, 3]
             
-            # compose update fields - price_stoploss
-            price_stoploss = portfolio_open.loc[code, 'price_highest'] - (portfolio_open.loc[code, 'price_highest'] * weekly_ATR)
-            portfolio_open.loc[code, 'price_stoploss'] = round(price_stoploss, 3)
+                # compose update fields - price_stoploss
+                price_stoploss = portfolio_open.loc[code, 'price_highest'] - (portfolio_open.loc[code, 'price_highest'] * weekly_ATR)
+                portfolio_open.loc[code, 'price_stoploss'] = round(price_stoploss, 3)
 
-            # compose update fields - win(%)
-            if portfolio_open.isnull().loc[code, 'price_close']:
-                win = (portfolio_open.loc[code, 'price_current'] - portfolio_open.loc[code, 'price_open']) * portfolio_open.loc[code, 'amount_open']
-                win_percentage = 100 * (portfolio_open.loc[code, 'price_current'] - portfolio_open.loc[code, 'price_open'])/portfolio_open.loc[code, 'price_open']
-            else:
-                win = (portfolio_open.loc[code, 'price_close'] - portfolio_open.loc[code, 'price_open']) * portfolio_open.loc[code, 'amount_open']
-                win_percentage = 100 * (portfolio_open.loc[code, 'price_close'] - portfolio_open.loc[code, 'price_open'])/portfolio_open.loc[code, 'price_open']               
-            portfolio_open.loc[code, 'win'] = round(win, 3)
-            portfolio_open.loc[code, 'win(%)'] = str(round(win_percentage, 3)) + '%'
+                # compose update fields - win(%)
+                if portfolio_open.isnull().loc[code, 'price_close']:
+                    win = (portfolio_open.loc[code, 'price_current'] - portfolio_open.loc[code, 'price_open']) * portfolio_open.loc[code, 'amount_open']
+                    win_percentage = 100 * (portfolio_open.loc[code, 'price_current'] - portfolio_open.loc[code, 'price_open'])/portfolio_open.loc[code, 'price_open']
+                else:
+                    win = (portfolio_open.loc[code, 'price_close'] - portfolio_open.loc[code, 'price_open']) * portfolio_open.loc[code, 'amount_open']
+                    win_percentage = 100 * (portfolio_open.loc[code, 'price_close'] - portfolio_open.loc[code, 'price_open'])/portfolio_open.loc[code, 'price_open']               
+                portfolio_open.loc[code, 'win'] = round(win, 3)
+                portfolio_open.loc[code, 'win(%)'] = str(round(win_percentage, 3)) + '%'
 
-            # compose update fields - last_update_date
-            portfolio_open.loc[code, 'last_update_date'] = today_ISO
-            
+                # compose update fields - last_update_date
+                portfolio_open.loc[code, 'last_update_date'] = today_ISO
+            #else:
+                # compose update fields - last_update_date
+            #    portfolio_open.loc[code, 'last_update_date'] = today_ISO
+
+        portfolio = portfolio_closed.append(portfolio_open)
+        filename = 'portfolio'
+        portfolio.to_excel(sys.path[0] + '/' + filename + '.xlsx', encoding='GBK')    
     else:
         print('hist_data is not the latest')
-
-    #portfolio_open.style.applymap(color_win_loss, subset=['win(%)']) \
-    #    .apply(highlight_columns, subset=['name', 'price_current', 'price_highest', 'win(%)', 'last_update_date'])
-    #filename = 'portfolio_open'
-    #portfolio.to_excel(sys.path[0] + '/' + filename + '.xlsx', engine='openpyxl')
-    portfolio = portfolio_closed.append(portfolio_open)
-    #print(portfolio)
-    filename = 'portfolio'
-    portfolio.to_excel(sys.path[0] + '/' + filename + '.xlsx', encoding='GBK')

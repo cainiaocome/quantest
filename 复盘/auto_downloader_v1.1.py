@@ -51,7 +51,7 @@ if __name__ == '__main__':
         now = strftime("%H:%M", localtime())
 
         # run below download steps in a perticular time only.
-        if (now == sched_Timer) and (not holiday):
+        if (now == "16:30") and (not holiday):
             ######################################
             # download today's stock price
             ######################################
@@ -157,9 +157,16 @@ if __name__ == '__main__':
                 os.system('rqalpha update_bundle')
             except:
                 print('rqalpha update_bundle failed')
- 
+
+        # update portfolio
+        if (now == "18:30") and (not holiday):
+            try:
+                os.system('python3 /Users/huiyang/Documents/quantest/risk_management/update_portfolio_v1.0.py')
+            except:
+                print('update_portfolio_v1.0.py failed')
+
         # check file and run below download steps if today's file is not downloaded yet.
-        if (now >= sched_Timer) and (not holiday):
+        if (now >= '16:30') and (not holiday):
             ##################################
             # check index file, 
             # if today's file is not downloaded yet. 
@@ -199,7 +206,7 @@ if __name__ == '__main__':
                 except:
                     print('download_hist_data failed')
 
-        if (now >= sched_Timer) and (not holiday) \
+        if (now >= '16:30') and (not holiday) \
             and (not calculate_complete):
             ##################################
             # check hist_data file, index files,
