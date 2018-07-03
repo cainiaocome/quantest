@@ -9,13 +9,13 @@ if __name__ == '__main__':
     today_ISO = datetime.today().date().isoformat()
 
     api = tushare_api()
-    start = '2018-02-14'
+    start = '2018-05-15'
     end = today_ISO
     #end = '2017-03-24'
     ######################################
     # download today's stock price
     ######################################
-    api.download_today_all()
+    #api.download_today_all()
     #api.downloadIndex(end=end)
     #api.download_hist_data(start=start, end=end)
     #try:

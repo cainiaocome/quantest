@@ -122,7 +122,7 @@ class tushare_api(object):
             if len(hist) > 0:
                 today_all.loc[stock, 'yday_percentage'] = hist.head(1).iloc[0, 7]
                 today_all.loc[stock, 'yday_volume'] = hist.head(1).iloc[0, 5]
-                today_all.loc[stock, 'yday_turnover'] = hist.head(1).iloc[0, 14]
+                #today_all.loc[stock, 'yday_turnover'] = hist.head(1).iloc[0, 14]
             # 2日涨幅
             hist = hist_data[hist_data.code == stock].head(3)
             if len(hist) > 0:
@@ -133,7 +133,7 @@ class tushare_api(object):
                 hist = hist_data[hist_data.code == stock].head(2)
                 hist = hist.groupby(['code'], as_index=False).sum()
                 today_all.loc[stock, '2days_volume'] = hist.iloc[0, 5]
-                today_all.loc[stock, '2days_turnover'] = hist.iloc[0, 14]
+                #today_all.loc[stock, '2days_turnover'] = hist.iloc[0, 14]
             # 3日涨幅
             hist = hist_data[hist_data.code == stock].head(4)
             if len(hist) > 0:
@@ -144,7 +144,7 @@ class tushare_api(object):
                 hist = hist_data[hist_data.code == stock].head(3)
                 hist = hist.groupby(['code'], as_index=False).sum()
                 today_all.loc[stock, '3days_volume'] = hist.iloc[0, 5]
-                today_all.loc[stock, '3days_turnover'] = hist.iloc[0, 14]
+                #today_all.loc[stock, '3days_turnover'] = hist.iloc[0, 14]
             # 4日涨幅
             hist = hist_data[hist_data.code == stock].head(5)
             if len(hist) > 0:
@@ -155,7 +155,7 @@ class tushare_api(object):
                 hist = hist_data[hist_data.code == stock].head(4)
                 hist = hist.groupby(['code'], as_index=False).sum()
                 today_all.loc[stock, '4days_volume'] = hist.iloc[0, 5]
-                today_all.loc[stock, '4days_turnover'] = hist.iloc[0, 14]
+                #today_all.loc[stock, '4days_turnover'] = hist.iloc[0, 14]
             # 5日涨幅
             hist = hist_data[hist_data.code == stock].head(6)
             if len(hist) > 0:
@@ -166,7 +166,7 @@ class tushare_api(object):
                 hist = hist_data[hist_data.code == stock].head(5)
                 hist = hist.groupby(['code'], as_index=False).sum()
                 today_all.loc[stock, '5days_volume'] = hist.iloc[0, 5]
-                today_all.loc[stock, '5days_turnover'] = hist.iloc[0, 14]
+                #today_all.loc[stock, '5days_turnover'] = hist.iloc[0, 14]
             # 10日涨幅
             hist = hist_data[hist_data.code == stock].head(11)
             if len(hist) > 0:
@@ -177,7 +177,7 @@ class tushare_api(object):
                 hist = hist_data[hist_data.code == stock].head(10)
                 hist = hist.groupby(['code'], as_index=False).sum()
                 today_all.loc[stock, '10days_volume'] = hist.iloc[0, 5]
-                today_all.loc[stock, '10days_turnover'] = hist.iloc[0, 14]
+                #today_all.loc[stock, '10days_turnover'] = hist.iloc[0, 14]
         filename = 'today_all_with_percentage'
         today_all.to_excel(self.working_folder + 'SPSS modeler/复盘/' + filename + '.xlsx', encoding='GBK')
         print('today_all_with_percentage successful ')
@@ -222,7 +222,7 @@ class tushare_api(object):
             if len(hist) > 0:
                 today_all.loc[stock, 'yday_percentage'] = hist.head(1).iloc[0, 7]
                 today_all.loc[stock, 'yday_volume'] = hist.head(1).iloc[0, 5]
-                today_all.loc[stock, 'yday_turnover'] = hist.head(1).iloc[0, 14]
+                #today_all.loc[stock, 'yday_turnover'] = hist.head(1).iloc[0, 14]
             # 2日涨幅
             hist = hist_data[hist_data.code == stock].head(3)
             if len(hist) > 0:
@@ -233,7 +233,7 @@ class tushare_api(object):
                 hist = hist_data[hist_data.code == stock].head(2)
                 hist = hist.groupby(['code'], as_index=False).sum()
                 today_all.loc[stock, '2days_volume'] = hist.iloc[0, 5]
-                today_all.loc[stock, '2days_turnover'] = hist.iloc[0, 14]
+                #today_all.loc[stock, '2days_turnover'] = hist.iloc[0, 14]
             # 3日涨幅
             hist = hist_data[hist_data.code == stock].head(4)
             if len(hist) > 0:
@@ -244,7 +244,7 @@ class tushare_api(object):
                 hist = hist_data[hist_data.code == stock].head(3)
                 hist = hist.groupby(['code'], as_index=False).sum()
                 today_all.loc[stock, '3days_volume'] = hist.iloc[0, 5]
-                today_all.loc[stock, '3days_turnover'] = hist.iloc[0, 14]
+                #today_all.loc[stock, '3days_turnover'] = hist.iloc[0, 14]
             # 4日涨幅
             hist = hist_data[hist_data.code == stock].head(5)
             if len(hist) > 0:
@@ -255,7 +255,7 @@ class tushare_api(object):
                 hist = hist_data[hist_data.code == stock].head(4)
                 hist = hist.groupby(['code'], as_index=False).sum()
                 today_all.loc[stock, '4days_volume'] = hist.iloc[0, 5]
-                today_all.loc[stock, '4days_turnover'] = hist.iloc[0, 14]
+                #today_all.loc[stock, '4days_turnover'] = hist.iloc[0, 14]
             # 5日涨幅
             hist = hist_data[hist_data.code == stock].head(6)
             if len(hist) > 0:
@@ -266,7 +266,7 @@ class tushare_api(object):
                 hist = hist_data[hist_data.code == stock].head(5)
                 hist = hist.groupby(['code'], as_index=False).sum()
                 today_all.loc[stock, '5days_volume'] = hist.iloc[0, 5]
-                today_all.loc[stock, '5days_turnover'] = hist.iloc[0, 14]
+                #today_all.loc[stock, '5days_turnover'] = hist.iloc[0, 14]
             # 10日涨幅
             hist = hist_data[hist_data.code == stock].head(11)
             if len(hist) > 0:
@@ -277,7 +277,7 @@ class tushare_api(object):
                 hist = hist_data[hist_data.code == stock].head(10)
                 hist = hist.groupby(['code'], as_index=False).sum()
                 today_all.loc[stock, '10days_volume'] = hist.iloc[0, 5]
-                today_all.loc[stock, '10days_turnover'] = hist.iloc[0, 14]
+                #today_all.loc[stock, '10days_turnover'] = hist.iloc[0, 14]
             # clean the percentage for today
             today_all.loc[stock, 'changepercent'] = 'NA'
 
