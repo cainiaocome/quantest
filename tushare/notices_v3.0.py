@@ -106,17 +106,11 @@ def M1_notification():
                         M1_last.to_excel(path + filename + '.xlsx',
                                     encoding='GBK')
                     
-                        msg =   '==========================' + '\n' + \
-                            today_ISO + ' - \n' + \
-                            '==========================' + '\n' + \
+                        msg = '两市总成交额占M0/M1：' + str(round(M0_percentage, 3)) + '% / ' + \
+                            str(round(M1_percentage, 3)) + '% \n' + \
+                            'M0/M1：' + str(M0) + '（亿）/ ' + str(M1) + '（亿）\n' + \
                             '两市总成交额：' + str(round(M1_index_amount, 3)) + '（亿）\n' + \
-                            '两市总成交量：' + str(round(M1_index_volume, 3)) + '（亿）\n' + \
-                            'M0：' + str(M0) + '（亿）\n' + \
-                            'M1：' + str(M1) + '（亿）\n' + \
-                            '两市总成交额占M0：' + str(round(M0_percentage, 3)) + '% \n' + \
-                            '两市总成交额占M1：' + str(round(M1_percentage, 3)) + '% \n' + \
-                            '=========================='
-
+                            '两市总成交量：' + str(round(M1_index_volume, 3)) + '（亿）'
                         #发送邮件
                         mail_subject = '两市成交 ' + today_ISO
                         mail_text = msg
@@ -155,13 +149,9 @@ def hindenburgOmenNotification():
             hindenburg_omen = pd.read_excel(path + filename + '.xlsx')
             #消息推送
             if (hindenburg_omen.iloc[0, 0] == today_ISO) & (hindenburg_omen.iloc[0, 4] == 'N'):
-                msg =   '==========================' + '\n' + \
-                        today_ISO + ' - \n' + \
-                        '==========================' + '\n' + \
-                        'hindenburg_omen_000001：' + str(round(hindenburg_omen.iloc[0, 1], 2)) + '\n' + \
+                msg =   'hindenburg_omen_000001：' + str(round(hindenburg_omen.iloc[0, 1], 2)) + '\n' + \
                         'hindenburg_omen_399001：' + str(round(hindenburg_omen.iloc[0, 2], 2)) + '\n' + \
-                        'hindenburg_omen_399006：' + str(round(hindenburg_omen.iloc[0, 3], 2)) + '\n' + \
-                        '=========================='
+                        'hindenburg_omen_399006：' + str(round(hindenburg_omen.iloc[0, 3], 2)) 
                 hindenburg_omen.iloc[0, 4] = 'Y'
                 filename = 'hindenburg_omen'
                 hindenburg_omen.to_excel(path + filename + '.xlsx',
